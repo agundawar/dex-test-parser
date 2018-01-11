@@ -26,16 +26,19 @@ class DexParser private constructor() {
          * Main method included for easy local testing during development
          */
         @JvmStatic fun main(vararg args: String) {
-            if (args.size != 2) {
-                println("Usage: apkPath outputPath")
+            if (args.size != 1) {
+                println("Usage: java -jar jarPath apkPath")
                 System.exit(1)
             }
             val apkPath = args[0]
-            val outputPath = args[1]
+            // val outputPath = args[1]
 
-            val allItems = Companion.findTestNames(apkPath)
+            val allItems = Companion.findTestNames(apkPath).distinct();
+            for (element in allItems) {
+                println(element)
+            }
 
-            Files.write(File(outputPath + "/AllTests.txt").toPath(), allItems)
+            // Files.write(File(outputPath + "/AllTests.txt").toPath(), allItems)
         }
 
         /**
@@ -54,6 +57,7 @@ class DexParser private constructor() {
         @JvmStatic fun findTestMethods(apkPath: String): List<TestMethod> {
             var allItems: List<TestMethod> = emptyList()
 
+/*
             val time = kotlin.system.measureTimeMillis {
                 val dexFiles = Companion.readDexFiles(apkPath)
 
@@ -63,10 +67,15 @@ class DexParser private constructor() {
                 allItems = junit3Items.plus(junit4Items).sorted()
 
                 val count = allItems.count()
+
                 println("Found $count fully qualified test methods")
             }
             println("Finished in $time ms")
-
+*/
+            val dexFiles = Companion.readDexFiles(apkPath)
+            val junit3Items = findJUnit3Tests(dexFiles).sorted()
+            val junit4Items = dexFiles.flatMap { it.findJUnit4Tests() }.sorted()
+            allItems = junit3Items.plus(junit4Items).sorted()
             return allItems
         }
 

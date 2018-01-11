@@ -94,4 +94,4 @@ task testParsing(dependsOn: ':test-app:assembleDebugAndroidTest', type: JavaExec
         }
     }
 }
-check.dependsOn testParsing
+// check.dependsOn testParsing
