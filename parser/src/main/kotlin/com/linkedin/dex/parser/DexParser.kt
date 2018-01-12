@@ -26,19 +26,19 @@ class DexParser private constructor() {
          * Main method included for easy local testing during development
          */
         @JvmStatic fun main(vararg args: String) {
-            if (args.size != 1) {
-                println("Usage: java -jar jarPath apkPath")
+            if (args.size != 2) {
+                println("Usage: java -jar jarPath apkPath outputPath")
                 System.exit(1)
             }
             val apkPath = args[0]
-            // val outputPath = args[1]
+            val outputPath = args[1]
 
             val allItems = Companion.findTestNames(apkPath).distinct();
             for (element in allItems) {
                 println(element)
             }
 
-            // Files.write(File(outputPath + "/AllTests.txt").toPath(), allItems)
+            Files.write(File(outputPath).toPath(), allItems)
         }
 
         /**
